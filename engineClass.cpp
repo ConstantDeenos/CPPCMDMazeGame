@@ -85,7 +85,6 @@ void Engine::placePawnsInRandomPositions(){
                         }
                     }
                 }
-                //Need to add check for the monster's positions
             } while (valid == 0);
             Jewel tempJewel(x, y);
             jewels.push_back(tempJewel);
@@ -158,12 +157,3 @@ void Engine::nextRound(){
     printMap();
     refresh();
 }
-
-// int ch = getch();
-    // char character = '*';
-
-    // if (ch == character){
-    //     printw("Yes *");
-    // } else {
-    //     printw("%d %d", ch, character);
-    // }

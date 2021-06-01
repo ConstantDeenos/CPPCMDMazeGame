@@ -16,6 +16,8 @@
 #include "jewelClass.cpp"
 #include "gnomeClass.h"
 #include "gnomeClass.cpp"
+#include "traalClass.h"
+#include "traalClass.cpp"
 
 using namespace std;
 
@@ -24,6 +26,7 @@ class Engine
 private:
     Poter poter;
     Gnome gnome;
+    Traal traal;
     vector<Jewel> jewels;
     vector<string> Map;
     int Round;
