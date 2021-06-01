@@ -18,6 +18,8 @@
 #include "gnomeClass.cpp"
 #include "traalClass.h"
 #include "traalClass.cpp"
+#include "scrollClass.h"
+#include "scrollClass.cpp"
 
 using namespace std;
 
@@ -27,9 +29,11 @@ private:
     Poter poter;
     Gnome gnome;
     Traal traal;
+    Scroll scroll;
     vector<Jewel> jewels;
     vector<string> Map;
     int Round;
+    int Score;
 public:
     Engine();
     ~Engine();
@@ -38,6 +42,7 @@ public:
     void printCoordinates();
     void printMap();
     int checkCollision(int, int);
+    string checkGameState(int, int);
     void nextRound();
     void coordinateMovements();
     void placePawnsInRandomPositions();

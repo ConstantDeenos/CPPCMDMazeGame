@@ -13,6 +13,7 @@ Engine::Engine(){
     }
 
     Round = 0;
+    Score = 0;
 
     placePawnsInRandomPositions();
 }
@@ -36,6 +37,28 @@ int Engine::checkCollision(int x, int y){
     }
 }
 
+string Engine::checkGameState(int x, int y){
+    if (poter.getPositionX() == traal.getPositionX() && poter.getPositionY() == traal.getPositionY()){
+        return "lose";
+    } else if (poter.getPositionX() == gnome.getPositionX() && gnome.getPositionY() == gnome.getPositionY()){
+        return "lose";
+    }
+
+    for (int i = 0; i < 10; i++){
+        if (poter.getPositionX() == jewels[i].getPositionX() && poter.getPositionY() == jewels[i].getPositionY()){
+            Score = Score + 10;
+            return "collected";
+        }
+    }
+
+    if (poter.getPositionX() == scroll.getPositionX() && poter.getPositionY() == scroll.getPositionY()){
+        Score = Score + 100;
+        return "win";
+    }
+
+    return "continue";
+}
+
 void Engine::printMap(){
     //Printing the map
     for (int i = 0; i < Map.size(); i++){
@@ -46,13 +69,12 @@ void Engine::printMap(){
 }
 
 void Engine::placePawnsInRandomPositions(){
+    //Random Number Generator
+    random_device rd;
+    mt19937 eng(rd());
+    uniform_int_distribution<int> distrX(1, 9); //Remember to change the limits for the size of the new map and make it dynamic not a single int
+    uniform_int_distribution<int> distrY(1, 5); //Remember to change the limits for the size of the new map and make it dynamic not a single int
     if (Round == 0){
-        //Random Number Generator
-        random_device rd;
-        mt19937 eng(rd());
-        uniform_int_distribution<int> distrX(1, 9); //Remember to change the limits for the size of the new map and make it dynamic not a single int
-        uniform_int_distribution<int> distrY(1, 5); //Remember to change the limits for the size of the new map and make it dynamic not a single int
-
         //Place Player on Map
         int valid = 0;
         int x, y;
@@ -90,7 +112,18 @@ void Engine::placePawnsInRandomPositions(){
             jewels.push_back(tempJewel);
             Map.at(y).at(x) = 'J';
         }
-
+    } else {
+        int valid = 0;
+        int x = 0;
+        int y = 0;
+        do{
+            x = distrX(eng);
+            y = distrY(eng);
+            valid = checkCollision(x, y);
+        } while (valid == 0);
+        Scroll tempScroll(x, y);
+        scroll = tempScroll;
+        Map.at(y).at(x) = 'S';
     }
 }
 
