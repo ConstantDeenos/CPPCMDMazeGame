@@ -12,6 +12,10 @@
 #include "poterClass.cpp"
 #include "movingClass.h"
 #include "movingClass.cpp"
+#include "jewelClass.h"
+#include "jewelClass.cpp"
+#include "gnomeClass.h"
+#include "gnomeClass.cpp"
 
 using namespace std;
 
@@ -19,8 +23,10 @@ class Engine
 {
 private:
     Poter poter;
+    Gnome gnome;
+    vector<Jewel> jewels;
     vector<string> Map;
-    int x, y;
+    int Round;
 public:
     Engine();
     ~Engine();
@@ -30,5 +36,7 @@ public:
     void printMap();
     int checkCollision(int, int);
     void nextRound();
+    void coordinateMovements();
+    void placePawnsInRandomPositions();
 };
 #endif

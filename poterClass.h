@@ -6,13 +6,16 @@
 #include "movingClass.h"
 
 class Poter : public Moving{
-private:
+    private:
 
-public:
-    Poter(){};
-    ~Poter(){};
-    Poter(int x, int y) : Moving(x, y){
-    }
+    public:
+        Poter(){};
+        ~Poter(){};
+        Poter(int x, int y) : Moving(x, y){
+
+        }
+    public:
+        int determineMovement();
 };
 
 #endif
