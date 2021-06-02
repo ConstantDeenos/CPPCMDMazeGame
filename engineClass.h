@@ -20,6 +20,8 @@
 #include "traalClass.cpp"
 #include "scrollClass.h"
 #include "scrollClass.cpp"
+#include "hiScoreClass.h"
+#include "hiScoreClass.cpp"
 
 using namespace std;
 
@@ -35,6 +37,7 @@ private:
     int Round;
     int Score;
     string GameState;
+    HiScore hiScore;
 public:
     Engine();
     ~Engine();
