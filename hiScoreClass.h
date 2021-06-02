@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <ostream>
 
 using namespace std;
 
@@ -14,6 +15,9 @@ private:
 public:
     HiScore();
     ~HiScore();
+public:
+    friend HiScore &operator << (HiScore &hiScore, string &name);
+    friend HiScore &operator << (HiScore &hiScore, int &score);
 };
 
 #endif

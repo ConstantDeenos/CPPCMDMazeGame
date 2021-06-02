@@ -1,6 +1,7 @@
 #ifndef engineClass_h
 #define engineClass_h
 
+//Libraries
 #include <fstream>
 #include <vector>
 #include <string>
@@ -8,6 +9,7 @@
 #include <random>
 #include <ncurses.h>
 
+//Classes
 #include "poterClass.h"
 #include "poterClass.cpp"
 #include "movingClass.h"
@@ -39,11 +41,15 @@ private:
     string GameState;
     HiScore hiScore;
 public:
+//Constructors and Destructor
     Engine();
     ~Engine();
 public:
+    //Getters and Setters
     vector<string> getMap();
     string getGameState();
+public:
+    //General Methods
     void printCoordinates();
     void printMap();
     int checkCollision(int, int);
