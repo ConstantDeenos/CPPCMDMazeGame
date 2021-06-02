@@ -28,7 +28,6 @@ int main(){
         engine.nextRound();
     } while(!(engine.getGameState() == "Win" || engine.getGameState() == "End" || engine.getGameState() == "Lost"));
 
-    //Deallocates memory and ends ncurses
     endwin();
 
     return 0;

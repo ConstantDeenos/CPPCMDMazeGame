@@ -48,6 +48,8 @@ public:
     //Getters and Setters
     vector<string> getMap();
     string getGameState();
+    HiScore getHiScore();
+    int getScore();
 public:
     //General Methods
     void printCoordinates();
@@ -58,5 +60,6 @@ public:
     void coordinateMovements();
     void placePawnsInRandomPositions();
     void placeScrollInMap();
+    void initiateWin();
 };
 #endif

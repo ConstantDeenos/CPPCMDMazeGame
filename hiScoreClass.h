@@ -16,6 +16,9 @@ public:
     HiScore();
     ~HiScore();
 public:
+    vector<string> getNames();
+    vector<int> getScores();
+public:
     friend HiScore &operator << (HiScore &hiScore, string &name);
     friend HiScore &operator << (HiScore &hiScore, int &score);
 };

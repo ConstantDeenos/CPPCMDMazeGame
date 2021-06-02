@@ -8,6 +8,14 @@ HiScore::~HiScore(){
     
 }
 
+vector<string> HiScore::getNames(){
+    return Names;
+}
+
+vector<int> HiScore::getScores(){
+    return Scores;
+}
+
 HiScore &operator << (HiScore &hiScore, string &name){
     hiScore.Names.push_back(name);
     return hiScore;

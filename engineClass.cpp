@@ -31,6 +31,14 @@ string Engine::getGameState(){
     return GameState;
 }
 
+int Engine::getScore(){
+    return Score;
+}
+
+HiScore Engine::getHiScore(){
+    return hiScore;
+}
+
 void Engine::printCoordinates(){
 }
 
@@ -286,6 +294,32 @@ void Engine::placeScrollInMap()
     }
 }
 
+void Engine::initiateWin(){
+    nocbreak();
+    clear();
+    echo();
+    keypad(stdscr, FALSE);
+
+    string username;
+    int ch = getch();
+    while (ch != '\n')
+    {
+        username.push_back(ch);
+        ch = getch();
+    }
+
+    hiScore<<username<<Score;
+
+    for (int i = 0; i < hiScore.getNames().size(); i++)
+    {
+        printw("%d. Name: ", i+1);
+        printw(hiScore.getNames()[i].data());
+        printw(" Score: %d", hiScore.getScores()[i]);
+    }
+    refresh();
+    getch();
+}
+
 void Engine::nextRound(){
     cout<<Score<<endl;
     coordinateMovements();
@@ -293,4 +327,8 @@ void Engine::nextRound(){
     printMap();
     refresh();
     Round++;
+
+    if(GameState == "Win"){
+        initiateWin();
+    }
 }
