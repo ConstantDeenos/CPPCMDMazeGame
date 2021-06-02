@@ -21,6 +21,7 @@ public:
 public:
     friend HiScore &operator << (HiScore &hiScore, string &name);
     friend HiScore &operator << (HiScore &hiScore, int &score);
+    void organise();
 };
 
 #endif

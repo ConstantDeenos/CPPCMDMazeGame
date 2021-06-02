@@ -86,8 +86,8 @@ void Engine::placePawnsInRandomPositions(){
     //Random Number Generator
     random_device rd;
     mt19937 eng(rd());
-    uniform_int_distribution<int> distrX(1, 9); //Remember to change the limits for the size of the new map and make it dynamic not a single int
-    uniform_int_distribution<int> distrY(1, 5); //Remember to change the limits for the size of the new map and make it dynamic not a single int
+    uniform_int_distribution<int> distrX(1, Map[0].size() - 1); //Remember to change the limits for the size of the new map and make it dynamic not a single int
+    uniform_int_distribution<int> distrY(1, Map.size() - 1); //Remember to change the limits for the size of the new map and make it dynamic not a single int
     if (Round == 0){
         //Place Player on Map
         int valid = 0;
@@ -115,7 +115,7 @@ void Engine::placePawnsInRandomPositions(){
                 {
                     valid = 0;
                 } else if (i != 0){
-                    for (int j = 0; j < jewels.size() - 1; j++){
+                    for (int j = 0; j < jewels.size(); j++){
                         if (x == jewels[j].getPositionX() && y == jewels[j].getPositionY()){
                             valid = 0;
                         }
@@ -295,12 +295,13 @@ void Engine::placeScrollInMap()
 }
 
 void Engine::initiateWin(){
-    nocbreak();
+    noraw();
     clear();
     echo();
     keypad(stdscr, FALSE);
 
     string username;
+    printw("Insert your username: ");
     int ch = getch();
     while (ch != '\n')
     {
@@ -316,12 +317,15 @@ void Engine::initiateWin(){
         printw(hiScore.getNames()[i].data());
         printw(" Score: %d", hiScore.getScores()[i]);
     }
+    printw("\nPress any key to continue...");
+    raw();
+    keypad(stdscr, TRUE);
+    noecho();
     refresh();
     getch();
 }
 
 void Engine::nextRound(){
-    cout<<Score<<endl;
     coordinateMovements();
     clear();
     printMap();
