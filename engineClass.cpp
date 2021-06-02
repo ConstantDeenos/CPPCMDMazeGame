@@ -177,6 +177,12 @@ void Engine::coordinateMovements(){
                 validKeyPress = 1;
             }
             break;
+        case ' ':
+            validKeyPress = 1;
+            break;
+        case 27:
+            validKeyPress = 1;
+            break;
         default:
             validKeyPress = 0;
             break;
@@ -189,4 +195,5 @@ void Engine::nextRound(){
     clear();
     printMap();
     refresh();
+    cout<<Round<<" ";;
 }
