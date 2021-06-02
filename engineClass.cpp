@@ -14,6 +14,7 @@ Engine::Engine(){
 
     Round = 0;
     Score = 0;
+    GameEnd = 0;
 
     placePawnsInRandomPositions();
 }
@@ -24,6 +25,10 @@ Engine::~Engine(){
 
 vector<string> Engine::getMap(){
     return Map;
+}
+
+int Engine::getGameEnd(){
+    return GameEnd;
 }
 
 void Engine::printCoordinates(){
@@ -38,20 +43,22 @@ int Engine::checkCollision(int x, int y){
 }
 
 string Engine::checkGameState(int x, int y){
-    if (poter.getPositionX() == traal.getPositionX() && poter.getPositionY() == traal.getPositionY()){
+    if (x == traal.getPositionX() && y == traal.getPositionY()){
         return "lose";
-    } else if (poter.getPositionX() == gnome.getPositionX() && gnome.getPositionY() == gnome.getPositionY()){
+    } else if (x == gnome.getPositionX() && y == gnome.getPositionY()){
         return "lose";
     }
 
     for (int i = 0; i < 10; i++){
-        if (poter.getPositionX() == jewels[i].getPositionX() && poter.getPositionY() == jewels[i].getPositionY()){
+        if (x == jewels[i].getPositionX() && y == jewels[i].getPositionY()){
+            jewels[i].setPositionX(0);
+            jewels[i].setPositionY(0);
             Score = Score + 10;
             return "collected";
         }
     }
 
-    if (poter.getPositionX() == scroll.getPositionX() && poter.getPositionY() == scroll.getPositionY()){
+    if (x == scroll.getPositionX() && y == scroll.getPositionY()){
         Score = Score + 100;
         return "win";
     }
@@ -129,12 +136,14 @@ void Engine::placePawnsInRandomPositions(){
 
 void Engine::coordinateMovements(){
     int valid, validKeyPress = 0;
+    string gameState;
     
     do{
         int input = poter.determineMovement();
         switch (input){
         case KEY_LEFT:
             valid = checkCollision(poter.getPositionX() - 1, poter.getPositionY());
+            gameState = checkGameState(poter.getPositionX() - 1, poter.getPositionY());
             if (valid == 1){
                 Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX());
                 Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX() - 1);
@@ -146,6 +155,7 @@ void Engine::coordinateMovements(){
             break;
         case KEY_RIGHT:
             valid = checkCollision(poter.getPositionX() + 1, poter.getPositionY());
+            gameState = checkGameState(poter.getPositionX() + 1, poter.getPositionY());
             if (valid == 1){
                 Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX() + 1);
                 Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX());
@@ -157,23 +167,25 @@ void Engine::coordinateMovements(){
             break;
         case KEY_UP:
             valid = checkCollision(poter.getPositionX(), poter.getPositionY() - 1);
+            gameState = checkGameState(poter.getPositionX(), poter.getPositionY() - 1);
             if (valid == 1){
-                Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX());
-                Map.at(poter.getPositionY()).insert(Map.at(poter.getPositionY()).begin() + poter.getPositionX(), ' ');
-                Map.at(poter.getPositionY() - 1).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX());
-                Map.at(poter.getPositionY() - 1).insert(Map.at(poter.getPositionY()).begin() + poter.getPositionX(), 'P');
+                Map[poter.getPositionY()].erase(Map[poter.getPositionY()].begin() + poter.getPositionX());
+                Map[poter.getPositionY()].insert(Map[poter.getPositionY()].begin() + poter.getPositionX(), ' ');
                 poter.MoveUp();
+                Map[poter.getPositionY()].erase(Map[poter.getPositionY()].begin() + poter.getPositionX());
+                Map[poter.getPositionY()].insert(Map[poter.getPositionY()].begin() + poter.getPositionX(), 'P');
                 validKeyPress = 1;
             }
             break;
         case KEY_DOWN:
             valid = checkCollision(poter.getPositionX(), poter.getPositionY() + 1);
+            gameState = checkGameState(poter.getPositionX(), poter.getPositionY() + 1);
             if (valid == 1){
-                Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX());
-                Map.at(poter.getPositionY()).insert(Map.at(poter.getPositionY()).begin() + poter.getPositionX(), ' ');
-                Map.at(poter.getPositionY() + 1).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX());
-                Map.at(poter.getPositionY() + 1).insert(Map.at(poter.getPositionY()).begin() + poter.getPositionX(), 'P');
+                Map[poter.getPositionY()].erase(Map[poter.getPositionY()].begin() + poter.getPositionX());
+                Map[poter.getPositionY()].insert(Map[poter.getPositionY()].begin() + poter.getPositionX(), ' ');
                 poter.MoveDown();
+                Map[poter.getPositionY()].erase(Map[poter.getPositionY()].begin() + poter.getPositionX());
+                Map[poter.getPositionY()].insert(Map[poter.getPositionY()].begin() + poter.getPositionX(), 'P');
                 validKeyPress = 1;
             }
             break;
@@ -182,6 +194,7 @@ void Engine::coordinateMovements(){
             break;
         case 27:
             validKeyPress = 1;
+            GameEnd = 1;
             break;
         default:
             validKeyPress = 0;
@@ -191,9 +204,10 @@ void Engine::coordinateMovements(){
 }
 
 void Engine::nextRound(){
+    cout<<Score<<endl;
     coordinateMovements();
     clear();
     printMap();
     refresh();
-    cout<<Round<<" ";;
+    Round++;
 }

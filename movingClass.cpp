@@ -21,11 +21,11 @@ void Moving::MoveRight(){
     PositionX++;
 }
 void Moving::MoveUp(){
-    PositionY++;
+    PositionY--;
 }
 
 void Moving::MoveDown(){
-    PositionY--;
+    PositionY++;
 }
 
 int Moving::getPositionX(){

@@ -34,11 +34,13 @@ private:
     vector<string> Map;
     int Round;
     int Score;
+    int GameEnd;
 public:
     Engine();
     ~Engine();
 public:
     vector<string> getMap();
+    int getGameEnd();
     void printCoordinates();
     void printMap();
     int checkCollision(int, int);

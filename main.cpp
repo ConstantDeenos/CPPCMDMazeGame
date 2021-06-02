@@ -26,12 +26,7 @@ int main(){
     do{
         tempMoves++;
         engine.nextRound();
-    } while(tempMoves < 5);
-    //Refreshes the screen to match what is in memory
-    refresh();
-
-    //Gets a char for input
-    getch();
+    } while(engine.getGameEnd() == 0);
 
     //Deallocates memory and ends ncurses
     endwin();
