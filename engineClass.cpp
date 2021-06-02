@@ -14,7 +14,7 @@ Engine::Engine(){
 
     Round = 0;
     Score = 0;
-    GameEnd = 0;
+    GameState = "Starting";
 
     placePawnsInRandomPositions();
 }
@@ -27,8 +27,8 @@ vector<string> Engine::getMap(){
     return Map;
 }
 
-int Engine::getGameEnd(){
-    return GameEnd;
+string Engine::getGameState(){
+    return GameState;
 }
 
 void Engine::printCoordinates(){
@@ -42,11 +42,11 @@ int Engine::checkCollision(int x, int y){
     }
 }
 
-string Engine::checkGameState(int x, int y){
+void Engine::checkGameState(int x, int y){
     if (x == traal.getPositionX() && y == traal.getPositionY()){
-        return "lose";
+        GameState = "Lost";
     } else if (x == gnome.getPositionX() && y == gnome.getPositionY()){
-        return "lose";
+        GameState = "Lost";
     }
 
     for (int i = 0; i < 10; i++){
@@ -54,16 +54,15 @@ string Engine::checkGameState(int x, int y){
             jewels[i].setPositionX(0);
             jewels[i].setPositionY(0);
             Score = Score + 10;
-            return "collected";
         }
     }
 
     if (x == scroll.getPositionX() && y == scroll.getPositionY()){
+        scroll.setPositionX(0);
+        scroll.setPositionY(0);
         Score = Score + 100;
-        return "win";
+        GameState = "Win";
     }
-
-    return "continue";
 }
 
 void Engine::printMap(){
@@ -119,31 +118,63 @@ void Engine::placePawnsInRandomPositions(){
             jewels.push_back(tempJewel);
             Map.at(y).at(x) = 'J';
         }
-    } else {
-        int valid = 0;
-        int x = 0;
-        int y = 0;
-        do{
+
+        //Place Traal on Map
+        valid = 0;
+        x = y = 0;
+        do
+        {
             x = distrX(eng);
             y = distrY(eng);
             valid = checkCollision(x, y);
+            if (x == poter.getPositionX() && y == poter.getPositionY()){
+                valid = 0;
+            } else{
+                for (int i = 0; i < 10; i++){
+                    if (x == jewels[i].getPositionX() && jewels[i].getPositionY()){
+                        valid = 0;
+                    }
+                }
+            }
         } while (valid == 0);
-        Scroll tempScroll(x, y);
-        scroll = tempScroll;
-        Map.at(y).at(x) = 'S';
+        Traal tempTraal(x, y);
+        traal = tempTraal;
+        Map.at(y).at(x) = 'T';
+        
+        //Place Gnome on Map
+        valid = 0;
+        x = y = 0;
+        do
+        {
+            x = distrX(eng);
+            y = distrY(eng);
+            valid = checkCollision(x, y);
+            if (x == poter.getPositionX() && y == poter.getPositionY()){
+                valid = 0;
+            } else{
+                for (int i = 0; i < 10; i++){
+                    if (x == jewels[i].getPositionX() && jewels[i].getPositionY()){
+                        valid = 0;
+                    }
+                }
+            }
+        } while (valid == 0);
+        Gnome tempGnome(x, y);
+        gnome = tempGnome;
+        Map.at(y).at(x) = 'G';
+        GameState = "Jewels";
     }
 }
 
 void Engine::coordinateMovements(){
     int valid, validKeyPress = 0;
-    string gameState;
     
     do{
         int input = poter.determineMovement();
         switch (input){
         case KEY_LEFT:
             valid = checkCollision(poter.getPositionX() - 1, poter.getPositionY());
-            gameState = checkGameState(poter.getPositionX() - 1, poter.getPositionY());
+            checkGameState(poter.getPositionX() - 1, poter.getPositionY());
             if (valid == 1){
                 Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX());
                 Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX() - 1);
@@ -155,7 +186,7 @@ void Engine::coordinateMovements(){
             break;
         case KEY_RIGHT:
             valid = checkCollision(poter.getPositionX() + 1, poter.getPositionY());
-            gameState = checkGameState(poter.getPositionX() + 1, poter.getPositionY());
+            checkGameState(poter.getPositionX() + 1, poter.getPositionY());
             if (valid == 1){
                 Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX() + 1);
                 Map.at(poter.getPositionY()).erase(Map.at(poter.getPositionY()).begin() + poter.getPositionX());
@@ -167,7 +198,7 @@ void Engine::coordinateMovements(){
             break;
         case KEY_UP:
             valid = checkCollision(poter.getPositionX(), poter.getPositionY() - 1);
-            gameState = checkGameState(poter.getPositionX(), poter.getPositionY() - 1);
+            checkGameState(poter.getPositionX(), poter.getPositionY() - 1);
             if (valid == 1){
                 Map[poter.getPositionY()].erase(Map[poter.getPositionY()].begin() + poter.getPositionX());
                 Map[poter.getPositionY()].insert(Map[poter.getPositionY()].begin() + poter.getPositionX(), ' ');
@@ -179,7 +210,7 @@ void Engine::coordinateMovements(){
             break;
         case KEY_DOWN:
             valid = checkCollision(poter.getPositionX(), poter.getPositionY() + 1);
-            gameState = checkGameState(poter.getPositionX(), poter.getPositionY() + 1);
+            checkGameState(poter.getPositionX(), poter.getPositionY() + 1);
             if (valid == 1){
                 Map[poter.getPositionY()].erase(Map[poter.getPositionY()].begin() + poter.getPositionX());
                 Map[poter.getPositionY()].insert(Map[poter.getPositionY()].begin() + poter.getPositionX(), ' ');
@@ -194,13 +225,65 @@ void Engine::coordinateMovements(){
             break;
         case 27:
             validKeyPress = 1;
-            GameEnd = 1;
+            GameState = "End";
             break;
         default:
             validKeyPress = 0;
             break;
         }
     } while (validKeyPress == 0);
+    if (Score == 100){
+        placeScrollInMap();
+    }
+}
+
+void Engine::placeScrollInMap()
+{
+    if (GameState != "Scroll") //Checking if a scroll has already been placed
+    {
+        int valid = 0;
+        int x = 0;
+        int y = 0;
+
+        //Random Number Generator
+        random_device rd;
+        mt19937 eng(rd());
+        uniform_int_distribution<int> distrX(1, 9); //Remember to change the limits for the size of the new map and make it dynamic not a single int
+        uniform_int_distribution<int> distrY(1, 5); //Remember to change the limits for the size of the new map and make it dynamic not a single int
+
+        do
+        {
+            x = distrX(eng);
+            y = distrY(eng);
+            valid = checkCollision(x, y);
+            if (x == poter.getPositionX() && y == poter.getPositionY())
+            {
+                valid = 0;
+            }
+            else if (x == traal.getPositionX() && y == traal.getPositionY())
+            {
+                valid = 0;
+            }
+            else if (x == gnome.getPositionX() && y == gnome.getPositionY())
+            {
+                valid = 0;
+            }
+            else
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    if (x == jewels[i].getPositionX() && jewels[i].getPositionY())
+                    {
+                        valid = 0;
+                    }
+                }
+            }
+        } while (valid == 0);
+        Scroll tempScroll(x, y);
+        scroll = tempScroll;
+        Map.at(y).at(x) = 'S';
+        GameState = "Scroll";
+    }
 }
 
 void Engine::nextRound(){

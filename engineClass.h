@@ -34,19 +34,20 @@ private:
     vector<string> Map;
     int Round;
     int Score;
-    int GameEnd;
+    string GameState;
 public:
     Engine();
     ~Engine();
 public:
     vector<string> getMap();
-    int getGameEnd();
+    string getGameState();
     void printCoordinates();
     void printMap();
     int checkCollision(int, int);
-    string checkGameState(int, int);
+    void checkGameState(int, int);
     void nextRound();
     void coordinateMovements();
     void placePawnsInRandomPositions();
+    void placeScrollInMap();
 };
 #endif
