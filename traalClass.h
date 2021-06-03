@@ -2,6 +2,7 @@
 #define traalClass_h
 
 #include <ncurses.h>
+#include <fstream>
 
 #include "movingClass.h"
 
@@ -15,7 +16,7 @@ class Traal : public Moving{
 
         }
     public:
-        int determineMovement();
+        int determineMovement(vector<string>, int, int);
 };
 
 #endif

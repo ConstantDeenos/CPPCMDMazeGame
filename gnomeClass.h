@@ -15,7 +15,7 @@ class Gnome : public Moving{
 
         }
     public:
-        int determineMovement();
+        int determineMovement(vector<string>);
 };
 
 #endif

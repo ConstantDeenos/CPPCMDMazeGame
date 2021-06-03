@@ -41,7 +41,7 @@ private:
     string GameState;
     HiScore hiScore;
 public:
-//Constructors and Destructor
+    //Constructors and Destructor
     Engine();
     ~Engine();
 public:
@@ -61,5 +61,6 @@ public:
     void placePawnsInRandomPositions();
     void placeScrollInMap();
     void initiateWin();
+    void movePawn(int, int, char);
 };
 #endif
