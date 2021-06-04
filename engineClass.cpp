@@ -178,9 +178,9 @@ void Engine::coordinateMovements(){
     int valid, validKeyPress = 0;
     
     movePawn(poter.getPositionX(), poter.getPositionY(), 'P');
-    int input = traal.determineMovement(Map, poter.getPositionX(), poter.getPositionY());
+    // int input = traal.determineMovement(Map, poter.getPositionX(), poter.getPositionY());
     // movePawn(traal.getPositionX(), traal.getPositionY(), 'T');
-    movePawn(gnome.getPositionX(), gnome.getPositionY(), 'G');
+    // movePawn(gnome.getPositionX(), gnome.getPositionY(), 'G');
 
     if (Score == 100){
         placeScrollInMap();
@@ -189,22 +189,22 @@ void Engine::coordinateMovements(){
 
 void Engine::movePawn(int x, int y, char pawn){
     int input, valid, validKeyPress = 0;
-    switch (pawn)
-    {
-    case 'P':
-        input = poter.determineMovement();
-        break;
-    case 'T':
-        input = traal.determineMovement(Map, poter.getPositionX(), poter.getPositionY());
-        break;
-    case 'G':
-        input = gnome.determineMovement(Map);
-        break;
-    default:
-        break;
-    }
 
     do{
+        switch (pawn)
+        {
+        case 'P':
+            input = poter.determineMovement();
+            break;
+        case 'T':
+            input = traal.determineMovement(Map, poter.getPositionX(), poter.getPositionY());
+            break;
+        case 'G':
+            input = gnome.determineMovement(Map);
+            break;
+        default:
+            break;
+        }
         switch (input){
         case KEY_LEFT:
             valid = checkCollision(x - 1, y);
@@ -234,10 +234,16 @@ void Engine::movePawn(int x, int y, char pawn){
                 
                 if (pawn == 'P'){
                     poter.MoveLeft();
+                    x = poter.getPositionX();
+                    y = poter.getPositionY();
                 } else if (pawn == 'T'){
                     traal.MoveLeft();
+                    x = traal.getPositionX();
+                    y = traal.getPositionY();
                 } else if (pawn == 'G'){
                     gnome.MoveLeft();
+                    x = gnome.getPositionX();
+                    y = gnome.getPositionY();
                 }
 
                 Map[y].erase(Map[y].begin() + x);
@@ -273,10 +279,16 @@ void Engine::movePawn(int x, int y, char pawn){
                 
                 if (pawn == 'P'){
                     poter.MoveRight();
+                    x = poter.getPositionX();
+                    y = poter.getPositionY();
                 } else if (pawn == 'T'){
                     traal.MoveRight();
+                    x = traal.getPositionX();
+                    y = traal.getPositionY();
                 } else if (pawn == 'G'){
                     gnome.MoveRight();
+                    x = gnome.getPositionX();
+                    y = gnome.getPositionY();
                 }
 
                 Map[y].erase(Map[y].begin() + x);
@@ -312,10 +324,16 @@ void Engine::movePawn(int x, int y, char pawn){
                 
                 if (pawn == 'P'){
                     poter.MoveUp();
+                    x = poter.getPositionX();
+                    y = poter.getPositionY();
                 } else if (pawn == 'T'){
                     traal.MoveUp();
+                    x = traal.getPositionX();
+                    y = traal.getPositionY();
                 } else if (pawn == 'G'){
                     gnome.MoveUp();
+                    x = gnome.getPositionX();
+                    y = gnome.getPositionY();
                 }
 
                 Map[y].erase(Map[y].begin() + x);
@@ -351,10 +369,16 @@ void Engine::movePawn(int x, int y, char pawn){
                 
                 if (pawn == 'P'){
                     poter.MoveDown();
+                    x = poter.getPositionX();
+                    y = poter.getPositionY();
                 } else if (pawn == 'T'){
                     traal.MoveDown();
+                    x = traal.getPositionX();
+                    y = traal.getPositionY();
                 } else if (pawn == 'G'){
                     gnome.MoveDown();
+                    x = gnome.getPositionX();
+                    y = gnome.getPositionY();
                 }
 
                 Map[y].erase(Map[y].begin() + x);
