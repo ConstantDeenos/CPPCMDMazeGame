@@ -16,7 +16,7 @@ class Traal : public Moving{
 
         }
     public:
-        int determineMovement(vector<string>, int, int);
+        int determineMovement(vector<string>);
 };
 
 #endif

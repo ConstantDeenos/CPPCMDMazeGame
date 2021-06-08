@@ -178,9 +178,8 @@ void Engine::coordinateMovements(){
     int valid, validKeyPress = 0;
     
     movePawn(poter.getPositionX(), poter.getPositionY(), 'P');
-    // int input = traal.determineMovement(Map, poter.getPositionX(), poter.getPositionY());
-    // movePawn(traal.getPositionX(), traal.getPositionY(), 'T');
-    // movePawn(gnome.getPositionX(), gnome.getPositionY(), 'G');
+    movePawn(traal.getPositionX(), traal.getPositionY(), 'T');
+    movePawn(gnome.getPositionX(), gnome.getPositionY(), 'G');
 
     if (Score == 100){
         placeScrollInMap();
@@ -197,7 +196,7 @@ void Engine::movePawn(int x, int y, char pawn){
             input = poter.determineMovement();
             break;
         case 'T':
-            input = traal.determineMovement(Map, poter.getPositionX(), poter.getPositionY());
+            input = traal.determineMovement(Map);
             break;
         case 'G':
             input = gnome.determineMovement(Map);
@@ -205,33 +204,40 @@ void Engine::movePawn(int x, int y, char pawn){
         default:
             break;
         }
+        int isJemOrScroll = 0;
         switch (input){
         case KEY_LEFT:
             valid = checkCollision(x - 1, y);
             checkGameState(x - 1, y);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
-                //Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
+                // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
                 if (pawn == 'T'){
                     for (int i = 0; i < jewels.size(); i++){
                         if (traal.getPositionX() == jewels[i].getPositionX() && traal.getPositionY() == jewels[i].getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'J');
+                            isJemOrScroll = 1;
                         } else if (traal.getPositionX() == scroll.getPositionX() && traal.getPositionY() == scroll.getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'S');
+                            isJemOrScroll = 1;
                         }
                     }
                 } else if (pawn == 'G') {
                     for (int i = 0; i < jewels.size(); i++){
                         if (gnome.getPositionX() == jewels[i].getPositionX() && gnome.getPositionY() == jewels[i].getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'J');
+                            isJemOrScroll = 1;
                         } else if (gnome.getPositionX() == scroll.getPositionX() && gnome.getPositionY() == scroll.getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'S');
+                            isJemOrScroll = 1;
                         }
                     }
-                } else {
+                }
+
+                if (isJemOrScroll == 0){
                     Map[y].insert(Map[y].begin() + x, ' ');
                 }
-                
+
                 if (pawn == 'P'){
                     poter.MoveLeft();
                     x = poter.getPositionX();
@@ -256,24 +262,30 @@ void Engine::movePawn(int x, int y, char pawn){
             checkGameState(x + 1, y);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
-                //Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
+                // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
                 if (pawn == 'T'){
                     for (int i = 0; i < jewels.size(); i++){
                         if (traal.getPositionX() == jewels[i].getPositionX() && traal.getPositionY() == jewels[i].getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'J');
+                            isJemOrScroll = 1;
                         } else if (traal.getPositionX() == scroll.getPositionX() && traal.getPositionY() == scroll.getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'S');
+                            isJemOrScroll = 1;
                         }
                     }
                 } else if (pawn == 'G') {
                     for (int i = 0; i < jewels.size(); i++){
                         if (gnome.getPositionX() == jewels[i].getPositionX() && gnome.getPositionY() == jewels[i].getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'J');
+                            isJemOrScroll = 1;
                         } else if (gnome.getPositionX() == scroll.getPositionX() && gnome.getPositionY() == scroll.getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'S');
+                            isJemOrScroll = 1;
                         }
                     }
-                } else {
+                }
+
+                if (isJemOrScroll == 0){
                     Map[y].insert(Map[y].begin() + x, ' ');
                 }
                 
@@ -301,24 +313,30 @@ void Engine::movePawn(int x, int y, char pawn){
             checkGameState(x, y - 1);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
-                //Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
+                // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
                 if (pawn == 'T'){
                     for (int i = 0; i < jewels.size(); i++){
                         if (traal.getPositionX() == jewels[i].getPositionX() && traal.getPositionY() == jewels[i].getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'J');
+                            isJemOrScroll = 1;
                         } else if (traal.getPositionX() == scroll.getPositionX() && traal.getPositionY() == scroll.getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'S');
+                            isJemOrScroll = 1;
                         }
                     }
                 } else if (pawn == 'G') {
                     for (int i = 0; i < jewels.size(); i++){
                         if (gnome.getPositionX() == jewels[i].getPositionX() && gnome.getPositionY() == jewels[i].getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'J');
+                            isJemOrScroll = 1;
                         } else if (gnome.getPositionX() == scroll.getPositionX() && gnome.getPositionY() == scroll.getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'S');
+                            isJemOrScroll = 1;
                         }
                     }
-                } else {
+                }
+
+                if (isJemOrScroll == 0){
                     Map[y].insert(Map[y].begin() + x, ' ');
                 }
                 
@@ -346,24 +364,30 @@ void Engine::movePawn(int x, int y, char pawn){
             checkGameState(x, y + 1);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
-                //Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
+                // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
                 if (pawn == 'T'){
                     for (int i = 0; i < jewels.size(); i++){
                         if (traal.getPositionX() == jewels[i].getPositionX() && traal.getPositionY() == jewels[i].getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'J');
+                            isJemOrScroll = 1;
                         } else if (traal.getPositionX() == scroll.getPositionX() && traal.getPositionY() == scroll.getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'S');
+                            isJemOrScroll = 1;
                         }
                     }
                 } else if (pawn == 'G') {
                     for (int i = 0; i < jewels.size(); i++){
                         if (gnome.getPositionX() == jewels[i].getPositionX() && gnome.getPositionY() == jewels[i].getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'J');
+                            isJemOrScroll = 1;
                         } else if (gnome.getPositionX() == scroll.getPositionX() && gnome.getPositionY() == scroll.getPositionY()){
                             Map[y].insert(Map[y].begin() + x, 'S');
+                            isJemOrScroll = 1;
                         }
                     }
-                } else {
+                }
+
+                if (isJemOrScroll == 0){
                     Map[y].insert(Map[y].begin() + x, ' ');
                 }
                 
