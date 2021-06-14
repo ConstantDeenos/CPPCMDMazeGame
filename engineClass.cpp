@@ -3,7 +3,17 @@
 Engine::Engine(){
     //Map Reading and assignment to vector of strings
     string mapLine;
-    ifstream mapFile ("map.txt");
+    ifstream mapFile (inputFileName().data());
+    if (!mapFile.is_open()){
+        perror("Error while opening file");
+        exit(1);
+    }
+
+    if (mapFile.bad()){
+        perror("Errow while reading file");
+        exit(2);
+    }
+
     if (mapFile.is_open()){
         while (getline(mapFile, mapLine)){
             if (mapLine.size() > 0){
@@ -17,6 +27,8 @@ Engine::Engine(){
     GameState = "Starting";
 
     placePawnsInRandomPositions();
+
+    mapFile.close();
 }
 
 Engine::~Engine(){
@@ -50,26 +62,38 @@ int Engine::checkCollision(int x, int y){
     }
 }
 
-void Engine::checkGameState(int x, int y){
-    if (x == traal.getPositionX() && y == traal.getPositionY()){
-        GameState = "Lost";
-    } else if (x == gnome.getPositionX() && y == gnome.getPositionY()){
-        GameState = "Lost";
-    }
-
-    for (int i = 0; i < 10; i++){
-        if (x == jewels[i].getPositionX() && y == jewels[i].getPositionY()){
-            jewels[i].setPositionX(0);
-            jewels[i].setPositionY(0);
-            Score = Score + 10;
+void Engine::checkGameState(int x, int y, char pawn){
+    if (pawn == 'P'){
+        if (x == traal.getPositionX() && y == traal.getPositionY())
+        {
+            GameState = "Lost";
         }
-    }
+        else if (x == gnome.getPositionX() && y == gnome.getPositionY())
+        {
+            GameState = "Lost";
+        }
 
-    if (x == scroll.getPositionX() && y == scroll.getPositionY()){
-        scroll.setPositionX(0);
-        scroll.setPositionY(0);
-        Score = Score + 100;
-        GameState = "Win";
+        for (int i = 0; i < 10; i++)
+        {
+            if (x == jewels[i].getPositionX() && y == jewels[i].getPositionY())
+            {
+                jewels[i].setPositionX(0);
+                jewels[i].setPositionY(0);
+                Score = Score + 10;
+            }
+        }
+
+        if (x == scroll.getPositionX() && y == scroll.getPositionY())
+        {
+            scroll.setPositionX(0);
+            scroll.setPositionY(0);
+            Score = Score + 100;
+            GameState = "Win";
+        }
+    } else if (pawn == 'T' || pawn == 'G') {
+        if (poter.getPositionX() == x && poter.getPositionY() == y){
+            GameState = "Lost";
+        }
     }
 }
 
@@ -176,10 +200,15 @@ void Engine::placePawnsInRandomPositions(){
 
 void Engine::coordinateMovements(){
     int valid, validKeyPress = 0;
-    
     movePawn(poter.getPositionX(), poter.getPositionY(), 'P');
-    movePawn(traal.getPositionX(), traal.getPositionY(), 'T');
-    movePawn(gnome.getPositionX(), gnome.getPositionY(), 'G');
+    
+    if (GameState != "Lost"){
+        movePawn(traal.getPositionX(), traal.getPositionY(), 'T');
+    }
+    
+    if (GameState != "Lost"){
+        movePawn(gnome.getPositionX(), gnome.getPositionY(), 'G');
+    }
 
     if (Score == 100){
         placeScrollInMap();
@@ -208,7 +237,7 @@ void Engine::movePawn(int x, int y, char pawn){
         switch (input){
         case KEY_LEFT:
             valid = checkCollision(x - 1, y);
-            checkGameState(x - 1, y);
+            checkGameState(x - 1, y, pawn);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
                 // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
@@ -259,7 +288,7 @@ void Engine::movePawn(int x, int y, char pawn){
             break;
         case KEY_RIGHT:
             valid = checkCollision(x + 1, y);
-            checkGameState(x + 1, y);
+            checkGameState(x + 1, y, pawn);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
                 // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
@@ -310,7 +339,7 @@ void Engine::movePawn(int x, int y, char pawn){
             break;
         case KEY_UP:
             valid = checkCollision(x, y - 1);
-            checkGameState(x, y - 1);
+            checkGameState(x, y - 1, pawn);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
                 // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
@@ -361,7 +390,7 @@ void Engine::movePawn(int x, int y, char pawn){
             break;
         case KEY_DOWN:
             valid = checkCollision(x, y + 1);
-            checkGameState(x, y + 1);
+            checkGameState(x, y + 1, pawn);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
                 // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
@@ -480,15 +509,16 @@ void Engine::initiateWin(){
     keypad(stdscr, FALSE);
 
     string username;
-    printw("Insert your username: ");
+    printw("Insert your username (Maximum 10 letters): ");
     int ch = getch();
-    while (ch != '\n')
+    while (ch != '\n' && username.size() <= 10)
     {
         username.push_back(ch);
         ch = getch();
     }
 
     hiScore<<username<<Score;
+    hiScore.startFileOperations();
 
     for (int i = 0; i < hiScore.getNames().size(); i++)
     {
@@ -502,6 +532,30 @@ void Engine::initiateWin(){
     noecho();
     refresh();
     getch();
+}
+
+string Engine::inputFileName(){
+    noraw();
+    clear();
+    echo();
+    keypad(stdscr, FALSE);
+
+    string fileName;
+    printw("Insert the name of the map file (for example map.txt): ");
+    refresh();
+    char ch = getch();
+    while (ch != '\n')
+    {
+        fileName.push_back(ch);
+        ch = getch();
+    }
+    raw();
+    keypad(stdscr, TRUE);
+    noecho();
+    clear();
+    refresh();
+
+    return fileName;
 }
 
 void Engine::nextRound(){

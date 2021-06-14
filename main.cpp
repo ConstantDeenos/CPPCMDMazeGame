@@ -12,23 +12,22 @@
 using namespace std;
 
 int main(){
-    Engine engine;
-    vector<string> map = engine.getMap();
-
     //Initialise Screen, set up memory, clear the screen and some settings
     initscr();
     raw();
     keypad(stdscr, TRUE);
     noecho();
-    
+    string mapString = "map.txt";
+    Engine engine;
+    vector<string> map = engine.getMap();
+
     engine.printMap();
-    int tempMoves = 0; //Temporary for ending of game
     do{
-        tempMoves++;
         engine.nextRound();
     } while(!(engine.getGameState() == "Win" || engine.getGameState() == "End" || engine.getGameState() == "Lost"));
 
     endwin();
+    cout<<engine.getGameState();
 
     return 0;
 }

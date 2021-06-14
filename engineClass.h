@@ -53,9 +53,10 @@ public:
 public:
     //General Methods
     void printCoordinates();
+    string inputFileName();
     void printMap();
     int checkCollision(int, int);
-    void checkGameState(int, int);
+    void checkGameState(int, int, char);
     void nextRound();
     void coordinateMovements();
     void placePawnsInRandomPositions();

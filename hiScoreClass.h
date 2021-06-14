@@ -21,7 +21,11 @@ public:
 public:
     friend HiScore &operator << (HiScore &hiScore, string &name);
     friend HiScore &operator << (HiScore &hiScore, int &score);
-    void organise();
+    void startFileOperations();
+    string inputFileName();
+    void readFile(string);
+    int attemptAddScore(int, string);
+    void writeFile(string);
 };
 
 #endif
