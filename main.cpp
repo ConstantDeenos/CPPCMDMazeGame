@@ -5,6 +5,8 @@
 #include <string>
 #include <time.h>
 #include <random>
+#include <chrono>
+#include <thread>
 
 #include "engineClass.h"
 #include "engineClass.cpp"
@@ -12,6 +14,9 @@
 using namespace std;
 
 int main(){
+    using namespace std::this_thread;
+    using namespace std::chrono;
+
     int gameQuit = 0;
     int selection = 1;
     int input;
@@ -63,17 +68,25 @@ int main(){
         switch (selection)
         {
         case 1:{
-            gameType = "Player";
+                gameType = "Player";
 
-            Engine engine;
-            engine.printMap();
-            do{
-                engine.nextRound();
-            }while(!(engine.getGameState() == "Win" || engine.getGameState() == "End" || engine.getGameState() == "Lost"));
+                Engine engine(gameType);
+                engine.printMap();
+                do{
+                    engine.nextRound();
+                }while(!(engine.getGameState() == "Win" || engine.getGameState() == "End" || engine.getGameState() == "Lost"));
             }
             break;
-        case 2:
-            gameType = "COM";
+        case 2:{
+                gameType = "COM";
+
+                Engine engine(gameType);
+                engine.printMap();
+                do{
+                    sleep_for(500ms);
+                    engine.nextRound();
+                }while(!(engine.getGameState() == "Win" || engine.getGameState() == "End" || engine.getGameState() == "Lost"));
+            }
             break;
         case 3:
             gameType = "NONE";
@@ -92,8 +105,8 @@ int main(){
     // do{
     //     engine.nextRound();
     // } while(!(engine.getGameState() == "Win" || engine.getGameState() == "End" || engine.getGameState() == "Lost"));
-
-    // endwin();
+    clear();
+    endwin();
 
     return 0;
 }

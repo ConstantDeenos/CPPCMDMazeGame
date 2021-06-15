@@ -40,9 +40,10 @@ private:
     int Score;
     string GameState;
     HiScore hiScore;
+    string GameType;
 public:
     //Constructors and Destructor
-    Engine();
+    Engine(string);
     ~Engine();
 public:
     //Getters and Setters
@@ -50,6 +51,7 @@ public:
     string getGameState();
     HiScore getHiScore();
     int getScore();
+    void setGameType(string);
 public:
     //General Methods
     void printCoordinates();

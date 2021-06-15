@@ -1,6 +1,6 @@
 #include "engineClass.h"
 
-Engine::Engine(){
+Engine::Engine(string gameType){
     //Map Reading and assignment to vector of strings
     string mapLine;
     ifstream mapFile (inputFileName().data());
@@ -25,10 +25,15 @@ Engine::Engine(){
     Round = 0;
     Score = 0;
     GameState = "Starting";
+    GameType = gameType;
 
     placePawnsInRandomPositions();
 
     mapFile.close();
+}
+
+void Engine::setGameType(string gameType){
+    GameType = gameType;
 }
 
 Engine::~Engine(){
@@ -222,7 +227,11 @@ void Engine::movePawn(int x, int y, char pawn){
         switch (pawn)
         {
         case 'P':
-            input = poter.determineMovement();
+            if (GameType == "Player"){
+                input = poter.getMovementFromKeyboard();
+            } else if (GameType == "COM"){
+                input = poter.determineMovement(Map);
+            }
             break;
         case 'T':
             input = traal.determineMovement(Map);
@@ -567,5 +576,12 @@ void Engine::nextRound(){
 
     if(GameState == "Win"){
         initiateWin();
+    }
+
+    if (GameState == "Lost"){
+        clear();
+        printw("You Lost. Your score was %d.\nPress any key to Continue...", Score);
+        refresh();
+        getch();
     }
 }

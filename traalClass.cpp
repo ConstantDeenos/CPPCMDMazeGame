@@ -1,6 +1,6 @@
 #include "traalClass.h"
 
-int Traal::determineMovement(vector<string>map){
+int Traal::determineMovement(vector<string> map){
     int movement = 0;
     vector<vector<int>> moves;
 
