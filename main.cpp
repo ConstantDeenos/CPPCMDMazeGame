@@ -21,6 +21,7 @@ int main(){
     int selection = 1;
     int input;
     string gameType;
+
     //Initialise Screen, set up memory, clear the screen and some settings
     initscr();
     raw();
@@ -28,6 +29,7 @@ int main(){
     noecho();
     curs_set(0);
     
+    //Check if command line supports colors and if so create color pairs
     if (has_colors() != 0){
         start_color();
         init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
@@ -36,7 +38,9 @@ int main(){
         init_pair(4, COLOR_RED, COLOR_BLACK);
     }
 
+    //Loop for multiple rounds
     do{
+        //Loop for menu
         do{
             clear();
             if (selection == 1){
@@ -66,6 +70,7 @@ int main(){
                 }
                 break;
             case 27:
+                //Escape Case
                 selection = 3;
                 break;
             default:
@@ -73,9 +78,11 @@ int main(){
             }
         } while (input != 10 && input != 27);
 
+        //Switch for the selection the user made from the menu
         switch (selection)
         {
         case 1:{
+                //Case for player being a human
                 gameType = "Player";
 
                 Engine engine(gameType);
@@ -86,6 +93,7 @@ int main(){
             }
             break;
         case 2:{
+                //Case for the player being a bot
                 gameType = "COM";
 
                 Engine engine(gameType);
@@ -97,6 +105,7 @@ int main(){
             }
             break;
         case 3:
+            //Case for quitting game
             gameType = "NONE";
             gameQuit = 1;
             break;
@@ -105,14 +114,7 @@ int main(){
         }
     } while (gameQuit == 0);
 
-    // string mapString = "map.txt";
-    // Engine engine;
-    // vector<string> map = engine.getMap();
-
-    // engine.printMap();
-    // do{
-    //     engine.nextRound();
-    // } while(!(engine.getGameState() == "Win" || engine.getGameState() == "End" || engine.getGameState() == "Lost"));
+    //Clearing and closing the window when the game ends
     clear();
     endwin();
 

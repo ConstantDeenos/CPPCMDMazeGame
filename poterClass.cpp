@@ -65,6 +65,7 @@ int Poter::determineMovement(vector<string> map){
 }
 
 int Poter::getMovementFromKeyboard(){
+    //Gets movement from keyboard
     int movement = getch();
     return movement;
 }

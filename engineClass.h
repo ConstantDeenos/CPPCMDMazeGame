@@ -63,7 +63,7 @@ public:
     void coordinateMovements();
     void placePawnsInRandomPositions();
     void placeScrollInMap();
-    void initiateWin();
+    void initiateEnding();
     void movePawn(int, int, char);
 };
 #endif

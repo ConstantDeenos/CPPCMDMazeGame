@@ -1,6 +1,7 @@
 #include "traalClass.h"
 
 int Traal::determineMovement(vector<string> map){
+    //Method for figuring out the best posible way to go to the player.
     int movement = 0;
     vector<vector<int>> moves;
 
@@ -21,6 +22,8 @@ int Traal::determineMovement(vector<string> map){
         moves.push_back(line);
     }
 
+    //Here starting from the player pawn it starts counting in each direction how many moves it will take to reach the monster.
+    //The first number that is next to a monster the monster moves in that direction
     do{
         for (int i = 1; i < moves.size() - 1; i++){
             for (int j = 1; j < moves[0].size() - 1; j++){

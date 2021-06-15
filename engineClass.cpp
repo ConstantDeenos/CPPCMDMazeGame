@@ -10,7 +10,7 @@ Engine::Engine(string gameType){
     }
 
     if (mapFile.bad()){
-        perror("Errow while reading file");
+        perror("Error while reading file");
         exit(2);
     }
 
@@ -68,6 +68,7 @@ int Engine::checkCollision(int x, int y){
 }
 
 void Engine::checkGameState(int x, int y, char pawn){
+    //Checking if the game should continue or if the player should win or lose
     if (pawn == 'P'){
         if (x == traal.getPositionX() && y == traal.getPositionY())
         {
@@ -240,6 +241,7 @@ void Engine::placePawnsInRandomPositions(){
 }
 
 void Engine::coordinateMovements(){
+    //Moving pawns in the correct order
     int valid, validKeyPress = 0;
     movePawn(poter.getPositionX(), poter.getPositionY(), 'P');
     
@@ -257,12 +259,15 @@ void Engine::coordinateMovements(){
 }
 
 void Engine::movePawn(int x, int y, char pawn){
+    //Universal method for moving each pawn, it can tell which pawn to move using the char pawn parameter
     int input, valid, validKeyPress = 0;
 
     do{
+        //Loop checking if the move the pawn wants to make can be made
         switch (pawn)
         {
         case 'P':
+            //For this case we have two extra cases, if the player is a player and if the player is a bot. Each case has its own method in the Poter class.
             if (GameType == "Player"){
                 input = poter.getMovementFromKeyboard();
             } else if (GameType == "COM"){
@@ -279,13 +284,16 @@ void Engine::movePawn(int x, int y, char pawn){
             break;
         }
         int isJemOrScroll = 0;
+        //The correct pawn returns the move it wants to make. Below it's checked whether that move can be made and if yes, it places the pawn in the correct place in the map.
         switch (input){
         case KEY_LEFT:
+            //Here it is checked if the position the pawn wants to move is a wall.
             valid = checkCollision(x - 1, y);
+            //Here it is ckecked if the player wins, loses, or if the player is standing on a scroll or jewel, it executes the correct methods.
             checkGameState(x - 1, y, pawn);
             if (valid == 1){
                 Map[y].erase(Map[y].begin() + x);
-                // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position
+                // Checking if the pawn is a monster and if it is and its standing on a scoll or jewel, it makes the jewel or scroll reappear when the monster is gone from the position.
                 if (pawn == 'T'){
                     for (int i = 0; i < jewels.size(); i++){
                         if (traal.getPositionX() == jewels[i].getPositionX() && traal.getPositionY() == jewels[i].getPositionY()){
@@ -312,6 +320,7 @@ void Engine::movePawn(int x, int y, char pawn){
                     Map[y].insert(Map[y].begin() + x, ' ');
                 }
 
+                //Here the program moves the pawn (in the map and in the corresponding object).
                 if (pawn == 'P'){
                     poter.MoveLeft();
                     x = poter.getPositionX();
@@ -485,9 +494,11 @@ void Engine::movePawn(int x, int y, char pawn){
             }
             break;
         case ' ':
+            //Stand still on space case
             validKeyPress = 1;
             break;
         case 27:
+            //End game on escape case
             validKeyPress = 1;
             GameState = "End";
             break;
@@ -547,12 +558,13 @@ void Engine::placeScrollInMap()
     }
 }
 
-void Engine::initiateWin(){
+void Engine::initiateEnding(){
     noraw();
     clear();
     echo();
     keypad(stdscr, FALSE);
 
+    //Getting the username of the player
     string username;
     printw("Insert your username (Maximum 10 letters): ");
     int ch = getch();
@@ -562,24 +574,26 @@ void Engine::initiateWin(){
         ch = getch();
     }
 
+    //Sending the username and the score to the hiScore object.
     hiScore<<username<<Score;
+    //Starts the reading and writing from the file operations for the hiScore class.
     hiScore.startFileOperations();
 
+    //Prints the High Score leaderboard to the console.
     for (int i = 0; i < hiScore.getNames().size(); i++)
     {
         printw("%d. Name: ", i+1);
         printw(hiScore.getNames()[i].data());
-        printw(" Score: %d", hiScore.getScores()[i]);
+        printw(" Score: %d\n", hiScore.getScores()[i]);
     }
-    printw("\nPress any key to continue...");
     raw();
     keypad(stdscr, TRUE);
     noecho();
     refresh();
-    getch();
 }
 
 string Engine::inputFileName(){
+    //Asking for the user to enter the name of the map file.
     noraw();
     clear();
     echo();
@@ -604,6 +618,7 @@ string Engine::inputFileName(){
 }
 
 void Engine::nextRound(){
+    //Starts the next round.
     coordinateMovements();
     clear();
     printMap();
@@ -611,11 +626,13 @@ void Engine::nextRound(){
     Round++;
 
     if(GameState == "Win"){
-        initiateWin();
+        initiateEnding();
+        printw("You win. Your score was %d.\nPress any key to Continue...", Score);
+        refresh();
     }
 
     if (GameState == "Lost"){
-        clear();
+        initiateEnding();
         printw("You Lost. Your score was %d.\nPress any key to Continue...", Score);
         refresh();
         getch();
