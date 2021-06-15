@@ -27,6 +27,14 @@ int main(){
     keypad(stdscr, TRUE);
     noecho();
     curs_set(0);
+    
+    if (has_colors() != 0){
+        start_color();
+        init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+        init_pair(2, COLOR_GREEN, COLOR_BLACK);
+        init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(4, COLOR_RED, COLOR_BLACK);
+    }
 
     do{
         do{

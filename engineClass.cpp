@@ -105,7 +105,43 @@ void Engine::checkGameState(int x, int y, char pawn){
 void Engine::printMap(){
     //Printing the map
     for (int i = 0; i < Map.size(); i++){
-        printw(Map[i].data());
+        for (int j = 0; j < Map[i].size(); j++){
+            if (has_colors() != 0){
+                switch (Map[i].data()[j])
+                {
+                case 'P':
+                    attron(COLOR_PAIR(2));
+                    printw("%c",Map[i].data()[j]);
+                    attroff(COLOR_PAIR(2));
+                    break;
+                case 'T':
+                    attron(COLOR_PAIR(4));
+                    printw("%c",Map[i].data()[j]);
+                    attroff(COLOR_PAIR(4));
+                    break;
+                case 'G':
+                    attron(COLOR_PAIR(1));
+                    printw("%c",Map[i].data()[j]);
+                    attroff(COLOR_PAIR(1));
+                    break;
+                case 'S':
+                    attron(COLOR_PAIR(3));
+                    printw("%c",Map[i].data()[j]);
+                    attroff(COLOR_PAIR(3));
+                    break;
+                case 'J':
+                    attron(COLOR_PAIR(3));
+                    printw("%c",Map[i].data()[j]);
+                    attroff(COLOR_PAIR(3));
+                    break;
+                default:
+                    printw("%c",Map[i].data()[j]);
+                    break;
+                }
+            } else {
+                printw("%c",Map[i].data()[j]);
+            }
+        }
         printw("\n");
     }
     refresh();
