@@ -43,6 +43,7 @@ int main(){
         //Loop for menu
         do{
             clear();
+            printw("You are poter(P), a student who has to collect 10 jewels (J), while avoiding the monsters Traal(T) and Gnome(G).\nAfter collecting the 10 jewels, a scroll(S) will appear. Collect the scroll to win and earn your degree!\n\nTo make a selection use the arrow keys and press enter. To quit the game either select -Quit- or press Escaoe.\n\n");
             if (selection == 1){
                 printw("> ");
             }
