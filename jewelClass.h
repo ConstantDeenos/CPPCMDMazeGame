@@ -21,4 +21,5 @@ public:
     void operator=(Jewel);
 };
 
+
 #endif
